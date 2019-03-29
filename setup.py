@@ -43,11 +43,11 @@ with open('requirements.txt') as f:
 
 setup(
     name='wechatpy',
-    version='1.7.4',
+    version='1.8.0',
     author='messense',
     author_email='messense@icloud.com',
     url='https://github.com/jxtech/wechatpy',
-    packages=find_packages(),
+    packages=find_packages(exclude=('tests', 'tests.*')),
     keywords='WeChat, weixin, SDK',
     description='WeChat SDK for Python',
     long_description=long_description,
@@ -70,7 +70,6 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
@@ -83,6 +82,6 @@ setup(
     ],
     extras_require={
         'cryptography': ['cryptography'],
-        'pycrypto': ['pycrypto'],
+        'pycrypto': ['pycryptodome'],
     }
 )

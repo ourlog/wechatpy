@@ -1,6 +1,43 @@
 Changelog
 ================
 
+Version 1.8.0
+-----------------
+
+Released on 2019-03-15
+
++ 企业号部门 get 接口增加 `id` 默认参数
++ 移除了对 Python 3.4 的支持
++ 替换不再维护的 pycrypto 依赖为更安全的 pycryptodome
++ 增加小程序 `wx.login` 获取登录用户信息 API
++ `_http` 变为 `WeChatPay` 实例的属性，解决创建多个实例，发送请求时数据会串的问题
++ 增加获取企业微信应用 `jsapi_ticket` API
++ 增加反序列化被动响应接口
++ 增加企业微信群聊相关操作，如创建、发送群聊消息等
++ 增加营销接口
++ `iter_followers` API `first_user_id` 变为传参,当用户持有 `last_openid` 时,可选增量获取用户，用 `return` 代替 `StopIteration` 以避免在 Python 3.7 中出现 `RuntimeError`
++ 增加 `iter_tag_users` 方法,获取所有某标签下用户列表
+
+Version 1.7.6
+-----------------
+
+Relased on 2019-01-04
+
++ 增加获取所有用户 openid API
++ 增加菜单进入小程序事件
++ 使用第三方代网页授权时，若 `component_access_token` 过期或无效自动刷新
++ 增加快速获取 pre auth url，可以直接微信中发送该链接，直接授权
+
+Version 1.7.5
+-----------------
+
+Released on 2018-08-01
+
++ 修复 OAuth URL 生成可能触发 UnicodeDecodeError 的问题
++ 依赖 xmltodict 版本要求 >= 0.11.0
++ 微信支付接口增加 `sub_appid` 参数以支持小程序支付功能
++ 增加帐号迁移转换 openid API
+
 Version 1.7.4
 -----------------
 

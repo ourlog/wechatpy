@@ -148,7 +148,7 @@ class WeChatWxa(BaseWeChatAPI):
         详情请参考
         https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&id=open1489140610_Uavc4
 
-        :param template_id: 代码库中的代码模版 ID
+        :param template_id: 代码库中的代码模板 ID
         :param ext_json: 第三方自定义的配置
         :param version: 代码版本号，开发者可自定义
         :param description: 代码描述，开发者可自定义
@@ -434,5 +434,24 @@ class WeChatWxa(BaseWeChatAPI):
             data={
                 'appid': appid,
                 'open_appid': open_appid,
+            }
+        )
+
+    def code_to_session(self, js_code):
+        """
+        登录凭证校验。通过 wx.login() 接口获得临时登录凭证 code 后传到开发者服务器调用此接口完成登录流程。更多使用方法详见 小程序登录
+        详情请参考
+        https://developers.weixin.qq.com/miniprogram/dev/api/code2Session.html
+
+        :param js_code:
+        :return:
+        """
+        return self._get(
+            'sns/jscode2session',
+            params={
+                'appid': self.appid,
+                'secret': self.secret,
+                'js_code': js_code,
+                'grant_type': 'authorization_code'
             }
         )

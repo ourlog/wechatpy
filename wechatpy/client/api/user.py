@@ -38,7 +38,7 @@ class WeChatUser(BaseWeChatAPI):
 
     def get_followers(self, first_user_id=None):
         """
-        获取用户列表
+        获取一页用户列表(当关注用户过多的情况下，这个接口只会返回一部分用户)
 
         详情请参考
         https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140840
@@ -61,6 +61,37 @@ class WeChatUser(BaseWeChatAPI):
             'user/get',
             params=params
         )
+
+    def iter_followers(self, first_user_id=None):
+        """
+        获取所有的用户openid列表
+
+        详情请参考
+        https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140840
+
+        :return: 返回一个迭代器，可以用for进行循环，得到openid
+
+        使用示例::
+
+            from wechatpy import WeChatClient
+
+            client = WeChatClient('appid', 'secret')
+            for openid in client.user.iter_followers():
+                print(openid)
+
+        """
+        while True:
+            follower_data = self.get_followers(first_user_id)
+            first_user_id = follower_data["next_openid"]
+            # 微信有个bug(或者叫feature)，没有下一页，也返回next_openid这个字段
+            # 所以要通过total_count和data的长度比较判断(比较麻烦，并且不稳定)
+            # 或者获得结果前先判断data是否存在
+            if 'data' not in follower_data:
+                return
+            for openid in follower_data['data']['openid']:
+                yield openid
+            if not first_user_id:
+                return
 
     def update_remark(self, user_id, remark):
         """
@@ -145,3 +176,19 @@ class WeChatUser(BaseWeChatAPI):
             result_processor=lambda x: x['user_info_list']
         )
         return res
+
+    def change_openid(self, from_appid, openid_list):
+        '''微信公众号主体变更迁移用户 openid
+
+        详情请参考
+        http://kf.qq.com/faq/170221aUnmmU170221eUZJNf.html
+
+        :param from_appid: 原公众号的 appid
+        :param openid_list: 需要转换的openid，这些必须是旧账号目前关注的才行，否则会出错；一次最多100个
+        :return: 转换后的 openid 信息列表
+        '''
+        return self._post(
+            'changeopenid',
+            data={'from_appid': from_appid, 'openid_list': openid_list},
+            result_processor=lambda x: x['result_list']
+        )
